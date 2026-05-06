@@ -1,0 +1,110 @@
+h1{
+    text-align: center;
+}
+
+label{
+    font-style:normal;
+    font-family: serif;
+    font-weight: 200;
+    font-size: medium;
+}
+input{
+    margin: 5px;
+padding: 5px;
+border-radius: 5px;
+border-color: black;
+}
+#list{
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    
+}
+.row{
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid;
+    padding: 10px;
+    background-color: rgb(212, 170, 195);
+    width: fit-content;
+}
+.box1{
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    gap: 10px;
+}
+.box2{
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+.box3{
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+.box4{
+    margin-bottom: 10px;
+}
+.button{
+    gap: 5px;
+    display: flex;
+    justify-content: center;
+}
+.btn{
+      height:30px;
+    width: auto;
+    background-color: dimgrey;
+    font-size: small;
+    color: white;
+}
+#pagenos{
+    align-items: center;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+}
+#pageno{
+    text-align: center;
+}
+.drop{
+    width: auto;
+    height:30px;
+    background-color: lightgrey;
+    font-size: small;
+    color:black;
+}
+#submit{
+    margin-bottom: 40px;
+}
+
+table{
+    align-items: center;
+    width: 100%;
+    height: 70%;
+}
+.table-container{
+    text-align: center;
+}
+th{
+    background-color: rgb(166, 209, 211);
+    height: 50px;
+    font-weight: 100px;
+    font-size: medium;
+
+}
+td{
+    text-align: center;
+    height: 30px;
+}
+table,th,td{
+    border:2px,solid,black;
+    border-collapse: collapse;
+}
+th,td{
+    padding: 10px;
+}
+#list{
+    padding-top: 40px;
+}

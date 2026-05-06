@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="todo.js" defer></script>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="libraries/zebra_datepicker.min.css">
+</head>
+<body>
+    <script src="libraries/jquery.min.js"></script>
+    <script src="libraries/zebra_datepicker.min.js"></script>
+  
+    <h1>TODO</h1>
+    <label>Date </label>
+    <input id="date" type="text"/>
+
+   
+    <label>Task </label>
+    <input type="text" id="task"/>
+    <label >Description </label>
+    <input type="text" id="desc"/>
+    <label>Due Date</label>
+    <input  id="due_Date"/>
+    
+    <label>Time</label>
+<input type="time" id="Time"/>
+    <button onclick="add()" id="submit" disabled class="btn">Add</button>
+    <br><center>
+    <select id="opt" class="drop">
+        <option>Default</option>
+        <option value="A-Z">A-Z</option>
+        <option Value="Z-A">Z-A</option>
+    </select>
+    <button id="sortbtn" onclick="sort_filter()" class="btn">Sort</button>
+    <select id="choose" class="drop">
+        <option value="All">All</option>
+        <option value="Pending">Pending</option>
+        <option value="Completed">Completed</option>
+    </select>
+    <button id="filterbtn"  onclick="sort_filter()" class="btn">Filter</button>
+    <select id="view" onchange="display()" class="drop">
+        <option value="tile">Tile</option>
+        <option value="Table">Table</option>
+    </select>
+<select id="page" class="drop" onchange="display()" disabled>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+</select>
+</center>
+    <ul id="list"></ul>
+    <br>
+    <li id="pageno"></li>
+</body>
+</html>
