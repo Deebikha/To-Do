@@ -4,21 +4,71 @@ let sortedarr=[];
 let currentview=[];
 let currentrow=5;
 let startpage=1;
-const check=/^\w+(?:\s\w+)*$/;
+let change=false;
+const check=/^\w+$/;
 const datefield=document.getElementById("date");
 const taskfield=document.getElementById("task");
 const descfield=document.getElementById("desc");
 const duefield=document.getElementById("due_Date");
 const timefield=document.getElementById("Time");
 const submitbtn=document.getElementById("submit");
+const warning=document.getElementById("warning");
 const required=[datefield,taskfield,duefield,timefield];
-function checkfield(){
- if(!(check.test(taskfield.value))){
-    submitbtn.disabled=true;
-    return;
- }
-    submitbtn.disabled=!required.every(t=>t.value.trim()!=='');
+
+
+function datechecker(){
+    if(duefield.value && datefield.value && duefield.value<datefield.value){
+        duefield.style.border="2px solid red";
+        duefield.style.bckground="red";
+        submitbtn.disabled=true;
+        alert("Due Date must be higher than Date");
+        return false;
+    }
+    else if(datefield.value && !(duefield.value)){
+ duefield.style.border="2px solid red";
+        duefield.style.bckground="red";
+        submitbtn.disabled=true;
+        return false;
+    }
+    else{
+         duefield.style.border="";
+        duefield.style.bckground="";
+        return true;
+    }
 }
+datefield.addEventListener('change',datechecker);
+duefield.addEventListener('change',datechecker);
+
+
+function checkfield(){
+    const anyfill=required.some(f=>f.value!=="");
+    if(anyfill){
+        required.forEach(t=>{
+            if(t.value===""){
+                 t.style.border="2px solid red";
+        t.style.bckground="red";
+        submitbtn.disabled=true;
+            }
+       
+        else{
+            t.style.border="";
+        t.style.bckground="";
+        } });
+    }
+    else{
+        required.forEach(t=>{
+            t.style.border="";
+        t.style.bckground="";
+        })
+    }
+ const test2 = (check.test(taskfield.value));
+ const test3=datechecker();
+const test=required.every(t=>t.value.trim()!=='');
+
+    submitbtn.disabled=!(test2 && test3 && test);
+
+}
+
 required.forEach(t=>{
     t.addEventListener('input',checkfield);
     t.addEventListener('change',checkfield);
@@ -26,7 +76,7 @@ required.forEach(t=>{
 checkfield();
 $(document).ready(function(){
     $('#date').Zebra_DatePicker({
-        format:'d-m-y',
+        format:'d-m-Y',
         onSelect:function(view,elements){
             checkfield();
         }
@@ -34,12 +84,23 @@ $(document).ready(function(){
    });
  $(document).ready(function(){
             $('#due_Date').Zebra_DatePicker({
-                format:'d-m-y',
+                format:'d-m-Y',
                 onSelect:function(view,elements){
             checkfield();
+            datechecker();
         }
             });
-        });      
+        });        
+const i1=document.getElementById("task");
+document.addEventListener("beforeinput",(e)=>{
+    const newvalue=i1.value.slice(0,i1.selectionStart)+e.data+i1.value.slice(i1.selectionEnd);
+    if(!check.test(newvalue)){
+        e.preventDefault();
+    }
+});
+
+
+
  function add() {
 const date=document.getElementById("date").value;
 const task=document.getElementById("task").value;
@@ -51,14 +112,6 @@ if(!date || !task || !due || !time){
     return;
 }
 
-if(!(check.test(task))){
-    alert("Task only contain Alphabet,Number and Space between word");
-    return;
-}
-if(new Date(due)<new Date(date)){
-    alert("Due Date must be higher than Date");
-    return;
-}
 const exist = arr.some((t,i)=>
    t.date ===date && t.task.toLowerCase()=== task.toLowerCase() && i!== endIndex
 );
@@ -96,28 +149,47 @@ function display(array=currentview){
                const pageno=document.getElementById("pageno");
            page.disabled=true;
            pageno.style.display='none'
+           const finalcontainer=document.createElement("div");
+           finalcontainer.className="row-container";
+           final.appendChild(finalcontainer);
     array.forEach((todo,index) => {
-       
      const data=document.createElement("div");
      data.className="row";
-    data.innerHTML=`
-    
-    <div class="box1"><span>Date: ${todo.date}</span><span>Due Date:   ${todo.due}</span><span> Time:  ${todo.time}</span></div>
-       
+    data.innerHTML=`  
+    <div class="box1"><span>Date: ${todo.date}</span><span>Due Date:   ${todo.due}</span>
+    <span> Time:  ${todo.time}</span></div>     
         <div class="box2">Task: ${todo.task} <br></div>
         <div class="box3">Description: ${todo.desc}</div>
         <div class="box4">
-         <select onchange="update_status(${index},this.value)" class="drop">
+         <select onchange="update_status(${index},this.value)" class="drop" id="status">
         <option ${todo.status === 'Pending' ? 'selected' : ''}>Pending</option>
-        <option ${todo.status=== 'Completed'? 'selected' : ''}>Completed</option>
+        <option ${todo.status=== 'InProgress'? 'selected' : ''}>InProgress</option>
+         <option ${todo.status=== 'Completed'? 'selected' : ''}>Completed</option>
+          <option ${todo.status=== 'Expire'? 'selected' : ''}>Expire</option>
         </select></div>
-   
    <div class="button">
         <button onclick="edit(${index})" class="btn">Edit</button>
         <button onclick="Delete(${index})" class="btn">Delete</button>
         </div>
         `;
-       final.append(data);});
+       finalcontainer.append(data);
+       const select = data.querySelector("select");
+       const button=data.querySelector("button");
+    if(todo.status==="Expire"){
+data.style.border="1px solid red";
+data.style.background="red";
+select.disabled=true;
+button.disabled=true;
+    }
+    else{
+        data.style.border="";
+        data.style.background="rgb(212, 170, 195)";
+        select.disabled=false;
+        button.disabled=false;
+    }
+    });
+
+       
  }
          if(viewopt==="Table"){
            const page=document.getElementById("page");
@@ -131,6 +203,8 @@ document.getElementById("page").addEventListener("change",(e)=>{
         startpage=1;
         displayTable();
     });
+
+
 
 function displayTable(){
        const final=document.getElementById("list");
@@ -152,32 +226,67 @@ function displayTable(){
             </thead>
             <tbody id="body">
             </tbody>
-            `
-            
+            `    
             const start=(startpage-1)*currentrow;
             const end=start+currentrow;
           const  pagerows=currentview.slice(start,end);
           const body=table.querySelector("tbody");
      pagerows.forEach((todo,i) => {
-    
      const data=document.createElement("tr");
       const realindex=start+i;
-    data.innerHTML=`
-    
+    data.innerHTML=`  
     <td> ${todo.date}</td>  <td> ${todo.task} </td> <td>
          <select onchange="update_status(${i},this.value)" class="drop">
         <option ${todo.status === 'Pending' ? 'selected' : ''}>Pending</option>
-        <option ${todo.status=== 'Completed'? 'selected' : ''}>Completed</option>
-        </select></td> <td> ${todo.desc}</td> <td>  ${todo.due}</td><td>   ${todo.time}</td>
+        <option ${todo.status=== 'InProgress'? 'selected' : ''}>InProgress</option>
+         <option ${todo.status=== 'Completed'? 'selected' : ''}>Completed</option>
+          <option ${todo.status=== 'Expire'? 'selected' : ''}>Expire</option>
+        </select></td>
+        <td> ${todo.desc}</td> <td>  ${todo.due}</td><td>   ${todo.time}</td>
    <td>
         <button onclick="edit(${realindex})" class="btn">Edit</button></td>
        <td> <button onclick="Delete(${realindex})" class="btn">Delete</button></td>
         
         ` ; body.appendChild(data);
+        const select = data.querySelector("select");
+        const button=data.querySelector("button");
+         if(todo.status==="Expire"){
+data.style.border="1px solid red";
+data.style.background="red";
+select.disabled=true;
+button.disabled=true;
+    }
+    else{
+        data.style.border="";
+        data.style.background="rgb(212, 170, 195)";
+        select.disabled=false;
+        button.disabled=false;
+    }
     });
     final.appendChild(table);
-    renderPage();
-       
+    renderPage();       
+}
+
+function statuschange(final){
+        const [day,month,year]=final.due.split("-").map(Number);
+        const[hour,min]=final.time.split(":").map(Number);
+        return new Date(year,month-1,day,hour,min);
+   
+}
+
+function checkExpire(){
+    const statusinterval=setInterval(()=>{
+    const now=new Date();
+    currentview.forEach((todo,i)=>{
+        const datetime=statuschange(todo);
+        if(datetime<now && todo.status!="Expire"){
+            todo.status="Expire";
+        }else{
+            todo.status=todo.status;        }
+    });
+    SaveLocal();
+    display(currentview);
+},10000);
 }
 function renderPage(){
     const page=document.getElementById("pageno");
@@ -196,13 +305,13 @@ function renderPage(){
     btn.style.fontWeight="bold";
       btn.style.backgroundColor="black";
     btn.style.color="white";}
-    
     btn.onclick=()=>{
     startpage=i;
     displayTable();};
-    
    page.appendChild(btn);}
 }}
+
+
 
 function Delete(index){
 arr.splice(index,1);
@@ -222,9 +331,9 @@ document.getElementById("desc").value=todo.desc;
 document.getElementById("due_Date").value=todo.due;
 document.getElementById("Time").value=todo.time;
 endIndex=arr.indexOf(todo);
-
-display(currentview);
 checkfield();
+datechecker();
+display(currentview);
 }
 
 
@@ -235,23 +344,18 @@ function update_status(index,value){
 display(arr);
 }
 
+
+
 document.getElementById("sortbtn").addEventListener('click',sort_filter);
 document.getElementById("filterbtn").addEventListener('click',sort_filter);
+
 function sort_filter(){
-     if(arr.length==0){
-        alert("No filter can be Done for Below Data");
-        return;
-    }
     const choice=document.getElementById("choose").value;
     if(choice==="All"){
       currentview=[...arr];
     }else{
    currentview= arr.filter(fil=>fil.status===choice)
     }
-    if(currentview.length==0){
-        alert("No Sort can be Done for Below Data");
-        return;
-    }   
     const order=document.getElementById("opt").value;
     if(order==='A-Z' || order==='Z-A'){
     currentview.sort((a,b)=>{
@@ -261,10 +365,10 @@ function sort_filter(){
         if(name2<name1) return order==='A-Z'?1:-1; 
         return 0;
     });}
-     
         display(currentview);
-
 }
+
+
 
 function SaveLocal(){
     localStorage.setItem("todos",JSON.stringify(arr));
@@ -275,6 +379,6 @@ window.onload=function(){
         arr=JSON.parse(saved);}
         currentview=[...arr];
         display(arr);
-    
+        checkExpire();
 };
 

@@ -13,6 +13,7 @@
     <script src="libraries/zebra_datepicker.min.js"></script>
   
     <h1>TODO</h1>
+    <center>
     <label>Date </label>
     <input id="date" type="text"/>
 
@@ -23,10 +24,10 @@
     <input type="text" id="desc"/>
     <label>Due Date</label>
     <input  id="due_Date"/>
-    
+    <span id="warning" style="color: red; display: none;"></span>
     <label>Time</label>
 <input type="time" id="Time"/>
-    <button onclick="add()" id="submit" disabled class="btn">Add</button>
+    <button onclick="add()" id="submit" disabled class="btn">Add</button></center>
     <br><center>
     <select id="opt" class="drop">
         <option>Default</option>
@@ -37,7 +38,9 @@
     <select id="choose" class="drop">
         <option value="All">All</option>
         <option value="Pending">Pending</option>
+        <option value="InProgress">InProgress</option>
         <option value="Completed">Completed</option>
+        <option value="Expire">Expire</option>
     </select>
     <button id="filterbtn"  onclick="sort_filter()" class="btn">Filter</button>
     <select id="view" onchange="display()" class="drop">

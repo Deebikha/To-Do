@@ -22,11 +22,18 @@ border-color: black;
 }
 .row{
     text-align: center;
-    border-radius: 10px;
     border: 1px solid;
-    padding: 10px;
+    padding: 2px;
     background-color: rgb(212, 170, 195);
-    width: fit-content;
+  box-sizing: border-box;  
+  margin-bottom: 5%;
+    
+}
+.row-container{
+     display: grid;
+   grid-template-columns: repeat(5,1fr);
+    gap: 1%;
+    justify-content: space-between;
 }
 .box1{
     display: flex;
